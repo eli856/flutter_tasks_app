@@ -10,7 +10,6 @@ class GoogleAuthService {
   Future<void> _ensureInitialized() async {
     if (_initialized) return;
 
-    // TODO: replace this string with your real WEB CLIENT ID
     await _googleSignIn.initialize(
       serverClientId:
           '2614100063-jnjqod7me7hcal9m6br6ug97ci42pbbp.apps.googleusercontent.com',
