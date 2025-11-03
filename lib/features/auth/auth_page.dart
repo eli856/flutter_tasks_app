@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_tasks_app/features/auth/google_auth_service.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -11,6 +12,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   final email = TextEditingController();
   final pass = TextEditingController();
+  final _googleAuthService = GoogleAuthService();
   final _formKey = GlobalKey<FormState>();
   bool isLogin = true;
   String? error;
@@ -41,10 +43,25 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => error = null);
+    try {
+      final user = await _googleAuthService.signInWithGoogle();
+      if (user == null) {
+        return;
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() => error = e.message);
+    } catch (e, st) {
+      debugPrint('Google sign-in error: $e');
+      debugPrintStack(stackTrace: st);
+      setState(() => error = e.toString());
+      // setState(() => error = "Google sign-in failed");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final formKey = GlobalKey<FormState>();
-
     return Scaffold(
       appBar: AppBar(title: Text(isLogin ? 'Sign in' : 'Create account')),
       body: Padding(
@@ -78,6 +95,18 @@ class _AuthPageState extends State<AuthPage> {
                   }
                 },
                 child: Text(isLogin ? 'Log in' : 'Sign up'),
+              ),
+
+              const SizedBox(height: 8),
+              const Text('or'),
+              const SizedBox(height: 8),
+
+              OutlinedButton.icon(
+                onPressed: _handleGoogleSignIn,
+                icon: const Icon(
+                  Icons.g_mobiledata,
+                ),
+                label: const Text('Continue with Google'),
               ),
               TextButton(
                 onPressed: () => setState(() => isLogin = !isLogin),
