@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_tasks_app/features/home/dashboard_bottom_nav.dart';
-import 'package:flutter_tasks_app/features/home/main_action_section.dart';
-import 'package:flutter_tasks_app/features/home/quick_overview_section.dart';
-import 'package:flutter_tasks_app/features/home/recent_activity_section.dart';
-import 'package:flutter_tasks_app/features/notes/notes_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tasks_app/features/home/presentation/widgets/dashboard_bottom_nav.dart';
+import 'package:flutter_tasks_app/features/home/presentation/widgets/main_action_section.dart';
+import 'package:flutter_tasks_app/features/home/presentation/widgets/quick_overview_section.dart';
+import 'package:flutter_tasks_app/features/home/presentation/widgets/recent_activity_section.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   final User user;
   const HomePage({super.key, required this.user});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final email = user.email ?? user.uid;
-    const primaryBlue = Color(0xFF3164F4);
-    const purple = Color(0xFF9B51E0);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
@@ -26,17 +24,32 @@ class HomePage extends StatelessWidget {
         title: const Row(
           children: [
             Icon(Icons.description_outlined, size: 22),
-            SizedBox(width: 8),
+            SizedBox(width: 12),
             Text('Dashboard', style: TextStyle(fontWeight: FontWeight.w600)),
           ],
         ),
-        actions: const [
-          SizedBox(width: 12),
-          CircleAvatar(
-            radius: 16,
-            backgroundImage: AssetImage('assets/images/avatar.png'),
+        actions: [
+          PopupMenuButton<_UserMenuAction>(
+            tooltip: 'Account',
+            onSelected: (value) async {
+              if (value == _UserMenuAction.logout) {
+                await FirebaseAuth.instance.signOut();
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: _UserMenuAction.logout,
+                child: Text('Logout'),
+              ),
+            ],
+            child: const Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: CircleAvatar(
+                radius: 16,
+                backgroundImage: AssetImage('assets/images/avatar.png'),
+              ),
+            ),
           ),
-          SizedBox(width: 16),
         ],
       ),
       body: Padding(
@@ -75,3 +88,5 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+enum _UserMenuAction { logout }

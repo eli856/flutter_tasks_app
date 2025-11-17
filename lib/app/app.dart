@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import '../features/auth/auth_gate.dart';
+import '../features/auth/presentation/auth_gate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tasks_app/routing/app_router.dart';
 
-class FlutterTasksApp extends StatelessWidget {
+class FlutterTasksApp extends ConsumerWidget {
+
   static const kPrimaryColor = Color(0xFF02187A);
   static const kSecondaryColor = Color(0xFF0059C2);
   static const kAccentColor = Color(0xFF00C2FF);
@@ -11,8 +14,11 @@ class FlutterTasksApp extends StatelessWidget {
   const FlutterTasksApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(goRouterProvider);
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      routerConfig: router,
       title: 'Flutter Tasks App',
       theme: ThemeData(
         useMaterial3: true,
@@ -52,7 +58,7 @@ class FlutterTasksApp extends StatelessWidget {
           style: TextButton.styleFrom(foregroundColor: kSecondaryColor),
         ),
       ),
-      home: const AuthGate(),
+      // home: const AuthGate(),
     );
   }
 }

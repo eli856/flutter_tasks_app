@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_tasks_app/features/auth/google_auth_service.dart';
+import 'package:flutter_tasks_app/features/auth/data/google_auth_service.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -56,7 +56,6 @@ class _AuthPageState extends State<AuthPage> {
       debugPrint('Google sign-in error: $e');
       debugPrintStack(stackTrace: st);
       setState(() => error = e.toString());
-      // setState(() => error = "Google sign-in failed");
     }
   }
 

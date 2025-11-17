@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tasks_app/features/notes/notes_page.dart';
+import 'package:flutter_tasks_app/features/notes/presentation/pages/notes_page.dart';
+import 'package:go_router/go_router.dart';
 
 class MainActionsSection extends StatelessWidget {
   const MainActionsSection({super.key});
@@ -17,11 +18,7 @@ class MainActionsSection extends StatelessWidget {
           icon: Icons.sticky_note_2_rounded,
           title: 'My Notes',
           subtitle: 'Access and manage your notes',
-          onTap: () {
-            Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (_) => const NotesPage()));
-          },
+          onTap: () => context.push('/notes'),
         ),
         const SizedBox(height: 12),
         MainActionCard(
